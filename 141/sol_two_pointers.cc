@@ -1,3 +1,5 @@
+// Reference: http://stackoverflow.com/questions/2663115/how-to-detect-a-loop-in-a-linked-list
+
 #include <iostream>
 
 using std::cout;
