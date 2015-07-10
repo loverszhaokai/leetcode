@@ -27,29 +27,19 @@ public:
 		v[iii] = iii + 1;
 	ans.push_back(v);
 
+	int index;
 	while (1) {
-		bool finish = true;
-		for (int iii = 0; iii < v.size(); iii++) {
-			if (v[iii] != n - k + iii + 1) {
-				finish = false;
-				break;
-			}
-		}
-		if (finish) {
-			return ans;
-		}
-
-		for (int iii = v.size() - 1; iii >= 0; iii--) {
-			if (v[iii] != n - k + iii + 1) {
-				v[iii]++;
-				for (int jjj = iii + 1; jjj < v.size(); jjj++) {
+		for (index = k - 1; index >= 0; index--) {
+			if (v[index] != n - k + index + 1) {
+				v[index]++;
+				for (int jjj = index + 1; jjj < v.size(); jjj++)
 					v[jjj] = v[jjj - 1] + 1;
-				}
 				ans.push_back(v);
 				break;
 			}
 		}
-
+		if (index < 0)
+			return ans;
 	}
     }
 };
@@ -59,7 +49,7 @@ int main()
 	Solution sln;
 
 {
-	vector<vector<int>> ans = sln.combine(25, 10);
+	vector<vector<int>> ans = sln.combine(4, 2);
 	print_matrix(ans);
 }
 
