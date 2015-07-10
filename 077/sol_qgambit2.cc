@@ -16,29 +16,32 @@ using std::map;
 using std::string;
 using std::vector;
 
-vector<vector<int>> ans;
-
-void run_recursively(const vector<int> &_arr, const int start,
-	const int end, const int count)
+// Reference: https://leetcode.com/discuss/43968/java-solution-with-backtracking
+void combine_backtrack_implement(vector<vector<int> > *_matrix, vector<int> *_nums,
+        const int start, const int end, const int index, const int k)
 {
-	if (0 == count) {
-		ans.push_back(_arr);
-		return;
-	}
+        if (index == k) {
+                _matrix->push_back(*_nums);
+                return;
+        }
 
-	for (int iii = start; iii <= end; iii++) {
-		vector<int> arr = _arr;
-		arr.push_back(iii);
-		run_recursively(arr, iii + 1, end, count - 1);
-	}
+        for (int iii = start; iii <= end - k + index + 1; iii++) {
+                (*_nums)[index] = iii;
+                combine_backtrack_implement(_matrix, _nums, iii + 1, end, index + 1, k);
+        }
 }
 
 class Solution {
 public:
     vector<vector<int>> combine(int n, int k) {
-	ans.clear();
-	run_recursively(vector<int>(), 1, n, k);
-	return ans;
+        vector<vector<int> > ans;
+
+        if (k > n || k <= 0)
+                return ans;
+
+        vector<int> nums(k, 0);
+        combine_backtrack_implement(&ans, &nums, 1, n, 0, k);
+        return ans;
     }
 };
 

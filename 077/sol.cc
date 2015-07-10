@@ -59,7 +59,7 @@ int main()
 	Solution sln;
 
 {
-	vector<vector<int>> ans = sln.combine(4, 2);
+	vector<vector<int>> ans = sln.combine(25, 10);
 	print_matrix(ans);
 }
 
