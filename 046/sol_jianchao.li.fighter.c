@@ -8,6 +8,8 @@
 #include <string>
 #include <vector>
 
+#include "utils.h"
+
 using std::cout;
 using std::endl;
 using std::map;
@@ -53,17 +55,6 @@ public:
 	return ret;
     }
 };
-
-void print_matrix(const vector<vector<int> > &matrix)
-{
-	for (int iii = 0; iii < matrix.size(); iii++) {
-		for (int jjj = 0; jjj < matrix[iii].size(); jjj++) {
-			cout << matrix[iii][jjj] << "\t";
-		}
-		cout << endl;
-	}
-	cout << endl;
-}
 
 int main()
 {

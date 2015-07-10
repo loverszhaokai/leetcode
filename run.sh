@@ -6,4 +6,4 @@ then
 	exit 1
 fi
 
-g++ $1 --std=c++11 && ./a.out 
+g++ $1 --std=c++11 -I ../ -L ../ -lutils && ./a.out 
