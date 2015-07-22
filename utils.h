@@ -9,7 +9,7 @@ using std::endl;
 using std::vector;
 
 template<class T>
-void print_vector(const vector<T> &_nums, const int _n)
+void print_vector(const vector<T> &_nums, const int _n = 10)
 {
 	cout << "[vector] nums=" << endl;
 	cout << "\t";
