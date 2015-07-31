@@ -4,6 +4,7 @@
 #include <algorithm>
 #include <iostream>
 #include <map>
+#include <stack>
 #include <string>
 #include <vector>
 
@@ -12,6 +13,7 @@
 using std::cout;
 using std::endl;
 using std::map;
+using std::stack;
 using std::string;
 using std::vector;
 
