@@ -1,3 +1,16 @@
+/*
+ * leetcode - solutions of leetcode
+ * --------------------------------
+ *
+ * Copyright 2015 Kai Zhao <loverszhao@gmail.com>
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ */
+
 #include <bits/stdc++.h>
 
 #include "utils.h"
@@ -22,7 +35,7 @@ int main()
 
 		TestCase &tc = test_cases[iii];
 
-		if ( != ) {
+		if ( tc.ret !=  ) {
 			cout << "Case #" << iii << " failed" << endl;
 			return -1;
 		}
