@@ -17,60 +17,49 @@
 
 using namespace std;
 
+// Reference: https://leetcode.com/discuss/40559/accepted-4ms-c-solution
+
 class Solution {
 public:
 	string longestPalindrome(string s) {
 
-		int len = 1;
-		int start = 0, end = 0;
+		int max_len = 0;
+		int start = 0;
+		int len, left, right;
+		int iii = 0;
 
-		int len1, len2;
-		int left, right;
+		while (iii < s.size()) {
 
-		if (s.size() == 0)
-			return "";
+			if (s.size() - iii <= max_len / 2) {
+				// There can not be a larger len
+				break;
+			}
 
-		for (int iii = 0; iii < s.size(); iii++) {
-
-			len1 = 1;
+			len = 1;
 			left = iii - 1;
+
+			while (iii < s.size() - 1 && s[iii] == s[iii + 1]) {
+				iii++;
+				len++;
+			}
+
 			right = iii + 1;
 
 			while (left >= 0 && right < s.size() && s[left] == s[right]) {
-				len1 += 2;
+				len += 2;
 				left--;
 				right++;
 			}
 
-			if (len1 > len) {
-				len = len1;
+			if (len > max_len) {
+				max_len = len;
 				start = left + 1;
-				end = right - 1;
 			}
 
-			if (iii > 0 && s[iii - 1] == s[iii]) {
-
-				len2 = 2;
-				left = iii - 2;
-				right = iii + 1;
-
-				while (left >= 0 && right < s.size() && s[left] == s[right]) {
-					len2 += 2;
-					left--;
-					right++;
-				}
-
-				if (len2 > len) {
-					len = len2;
-					start = left + 1;
-					end = right - 1;
-				}
-			}
+			iii++;
 		}
 
-		string ans(s.begin() + start, s.begin() + end + 1);
-
-		return ans;
+		return s.substr(start, max_len);
 	}
 };
 
@@ -83,6 +72,8 @@ int main()
 		string ret;
 	} test_cases [] = {
 
+		{ "", "" },
+		{ "s", "s" },
 		{ "xmadamyx", "madam" },
 		{ "xmaiiamyx", "maiiam" },
 		{ "iiiii", "iiiii" },
