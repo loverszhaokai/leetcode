@@ -24,33 +24,29 @@ struct TreeNode {
 	TreeNode(int x) : val(x), left(NULL), right(NULL) {}
 };
 
-TreeNode *run(TreeNode *node, TreeNode *p, TreeNode *q,	bool *find_p, bool *find_q)
+TreeNode *run(TreeNode *node, TreeNode *p, TreeNode *q)
 {
 	if (!node)
 		return NULL;
 
-	if (node == p)
-		*find_p = true;
-	if (node == q)
-		*find_q = true;
-
-	TreeNode * ret = NULL;
-	bool left_find_p = false, left_find_q = false;
-	bool right_find_p = false, right_find_q = false;
-
-	ret = run(node->left, p, q, &left_find_p, &left_find_q);
-	if (ret)
-		return ret;
-
-	ret = run(node->right, p, q, &right_find_p, &right_find_q);
-	if (ret)
-		return ret;
-
-	*find_p = *find_p || left_find_p || right_find_p;
-	*find_q = *find_q || left_find_q || right_find_q;
-
-	if (*find_p && *find_q)
+	if (node == p || node == q)
 		return node;
+
+	TreeNode *left_ret = NULL, *right_ret = NULL;
+
+	left_ret = run(node->left, p, q);
+	right_ret = run(node->right, p, q);
+
+	if (left_ret && right_ret)
+		return node;
+
+	if (left_ret)
+		return left_ret;
+
+	if (right_ret)
+		return right_ret;
+
+	return NULL;
 }
 
 /**
@@ -72,9 +68,7 @@ public:
 		if (p == q)
 			return p;
 
-		bool find_p = false, find_q = false;
-
-		return run(root, p, q, &find_p, &find_q);
+		return run(root, p, q);
 	}
 };
 
