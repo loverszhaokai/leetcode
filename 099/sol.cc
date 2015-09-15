@@ -25,7 +25,7 @@ struct TreeNode {
 };
 
 
-vector<TreeNode *> nodes;
+TreeNode *pre_node, *node1, *node2;
 
 void inorder(TreeNode *node)
 {
@@ -34,7 +34,25 @@ void inorder(TreeNode *node)
 
 	inorder(node->left);
 
-	nodes.push_back(node);
+	if (pre_node) {
+
+		if (pre_node->val > node->val) {
+
+			if (node1 == NULL) {
+				// original: 1 2 3
+				// swapped : 1 3 2
+
+				node1 = pre_node;
+				node2 = node;
+
+			} else {
+				// Over
+				node2 = node;
+				return;
+			}
+		}
+	}
+	pre_node = node;
 
 	inorder(node->right);
 }
@@ -55,40 +73,11 @@ public:
 		if (!root)
 			return;
 
-		nodes.clear();
+		pre_node = NULL;
+		node1 = NULL;
+		node2 = NULL;
 
 		inorder(root);
-
-		TreeNode *node1 = NULL, *node2 = NULL;
-
-		for (int iii = 0; iii < nodes.size(); iii++) {
-
-			if (iii + 1 < nodes.size() &&
-				nodes[iii]->val > nodes[iii + 1]->val) {
-
-				if (node1 == NULL) {
-
-					node1 = nodes[iii];
-					if (iii + 2 < nodes.size()) {
-
-						if (nodes[iii + 2]->val > nodes[iii]->val) {
-							// 1 8 4 10
-							//   ^
-							node2 = nodes[iii + 1];
-							break;
-						}
-					} else {
-						// 1 8 4
-						//   ^
-						node2 = nodes[iii + 1];
-						break;
-					}
-				} else {
-					node2 = nodes[iii + 1];
-					break;
-				}
-			}
-		}
 
 		if (node1 && node2) {
 			int tmp = node1->val;
