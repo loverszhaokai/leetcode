@@ -45,10 +45,12 @@ public:
 		TreeNode *cnt_node = root;
 		TreeNode *pre_node = NULL; // The previous node of post order
 		int total_val = 0;         // The total values of the nodes_vec
+		vector<int> cnt_path;
 		vector<TreeNode *> nodes_vec;
 
 		while (cnt_node) {
 			total_val += cnt_node->val;
+			cnt_path.push_back(cnt_node->val);
 			nodes_vec.push_back(cnt_node);
 			cnt_node = cnt_node->left;
 		}
@@ -62,14 +64,12 @@ public:
 
 				if (!cnt_node->left && !cnt_node->right && total_val == sum) {
 					// cnt_node is leaf node
-					vector<int> tmp;
-					for (auto item : nodes_vec)
-						tmp.push_back(item->val);
-					ans.push_back(tmp);
+					ans.push_back(cnt_path);
 				}
 
 				// Pop cnt_node
 				total_val -= cnt_node->val;
+				cnt_path.pop_back();
 				nodes_vec.pop_back();
 				pre_node = cnt_node;
 			} else {
@@ -77,6 +77,7 @@ public:
 				cnt_node = cnt_node->right;
 				while (cnt_node) {
 					total_val += cnt_node->val;
+					cnt_path.push_back(cnt_node->val);
 					nodes_vec.push_back(cnt_node);
 					cnt_node = cnt_node->left;
 				}
