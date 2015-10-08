@@ -35,8 +35,11 @@ int main()
 
 		TestCase &tc = test_cases[iii];
 
-		if ( tc.ret !=  ) {
+		auto ret = sl
+
+		if ( tc.ret != ret ) {
 			cout << "Case #" << iii << " failed" << endl;
+			cout << "Actual ret=" << ret << endl;
 			return -1;
 		}
 
