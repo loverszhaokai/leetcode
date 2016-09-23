@@ -1,0 +1,231 @@
+/*
+ * leetcode - solutions of leetcode
+ * --------------------------------
+ *
+ * Copyright 2015 Kai Zhao <loverszhao@gmail.com>
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ */
+
+//
+// Details:
+//   RunTime: 449ms
+//   Beats  : 18.97%
+//
+#include <bits/stdc++.h>
+#include <vector>
+
+#include "utils.h"
+
+using namespace std;
+
+bool FindTargetColumn(const vector<vector<int>>& matrix, int x, int y_1, int y_2, int target) {
+  if (y_1 > y_2 ||
+      matrix[x][y_1] > target ||
+      matrix[x][y_2] < target) {
+    return false;
+  }
+
+  const int mid = (y_1 + y_2) / 2;
+  if (matrix[x][mid] == target) {
+    return true;
+  } else if (matrix[x][mid] > target) {
+    return FindTargetColumn(matrix, x, y_1, mid - 1, target);
+  } else {
+    return FindTargetColumn(matrix, x, mid + 1, y_2, target);
+  }
+
+  return false;
+}
+
+bool FindTargetLine(const vector<vector<int>>& matrix, int x_1, int x_2, int y, int target) {
+  if (x_1 > x_2 ||
+      matrix[x_1][y] > target ||
+      matrix[x_2][y] < target) {
+    return false;
+  }
+
+  const int mid = (x_1 + x_2) / 2;
+  if (matrix[mid][y] == target) {
+    return true;
+  } else if (matrix[mid][y] > target) {
+    return FindTargetLine(matrix, x_1, mid - 1, y, target);
+  } else {
+    return FindTargetLine(matrix, mid + 1, x_2, y, target);
+  }
+
+  return false;
+}
+
+void FindPointImpl(const vector<vector<int>>& matrix, int x_1, int y_1, int x_2, int y_2, int target, int *x, int *y) {
+  if (x_1 > x_2 || y_1 > y_2 ||
+      matrix[x_2][y_2] < target) {
+    return;
+  }
+
+  const int mid_x = (x_1 + x_2) / 2;
+  const int mid_y = (y_1 + y_2) / 2;
+
+  if (matrix[mid_x][mid_y] == target) {
+    *x = mid_x;
+    *y = mid_y;
+    return;
+  } else if (matrix[mid_x][mid_y] < target) {
+    return FindPointImpl(matrix, mid_x + 1, mid_y + 1, x_2, y_2, target, x, y);
+  } else {
+    *x = mid_x;
+    *y = mid_y;
+    return FindPointImpl(matrix, x_1, y_1, mid_x - 1, mid_y - 1, target, x, y);
+  }
+
+  return;
+}
+
+void FindPoint(const vector<vector<int>>& matrix, int x_1, int y_1, int x_2, int y_2, int target, int *x, int *y) {
+  const int width = y_2 - y_1;
+  const int height = x_2 - x_1;
+
+  int fx = x_2;
+  int fy = y_2;
+
+  if (width > height) {
+    fy = y_1 + height;
+  } else if (width < height) {
+    fx = x_1 + width;
+  }
+
+  if (matrix[fx][fy] <= target) {
+    *x = fx;
+    *y = fy;
+    return;
+  }
+
+  FindPointImpl(matrix, x_1, y_1, fx, fy, target, x, y);
+}
+
+bool FindTarget(const vector<vector<int>>& matrix, int x_1, int y_1, int x_2, int y_2, int target) {
+  if (x_1 > x_2 || y_1 > y_2 ||
+      matrix[x_1][y_1] > target || matrix[x_2][y_2] < target) {
+    return false;
+  }
+
+  if (x_1 == x_2) {
+    return FindTargetColumn(matrix, x_1, y_1, y_2, target);
+  } else if (y_1 == y_2) {
+    return FindTargetLine(matrix, x_1, x_2, y_1, target);
+  }
+
+  int x = x_1, y = y_1;
+  FindPoint(matrix, x_1, y_1, x_2, y_2, target, &x, &y);
+
+  if (matrix[x][y] == target) {
+    return true;
+  } else if (matrix[x][y] > target) {
+    return FindTarget(matrix, x_1, y, x, y_2, target) || FindTarget(matrix, x, y_1, x_2, y, target);
+  }
+
+  if (x == x_2) {
+    return FindTarget(matrix, x_1, y + 1, x_2, y_2, target);
+  } else if (y == y_2) {
+    return FindTarget(matrix, x + 1, y_1, x_2, y_2, target);
+  }
+
+  return false;
+}
+
+class Solution {
+public:
+    bool searchMatrix(vector<vector<int>>& matrix, int target) {
+      if (matrix.size() == 0 || matrix[0].size() == 0) {
+        return false;
+      }
+      return FindTarget(matrix, 0, 0, matrix.size() - 1, matrix[0].size() - 1, target);
+    }
+};
+
+int main()
+{
+	Solution sln;
+
+	struct TestCase {
+    vector<vector<int>> matrix;
+    int target;
+    bool expected_ret;
+	} test_cases [] = {
+
+		{
+      {
+        { 1, 3, 6 },
+        { 4, 6, 7 },
+        { 5, 8, 9 },
+      },
+      6, true
+    },
+
+    {
+      {
+        { 1, 3, 6 },
+        { 4, 6, 7 },
+        { 5, 8, 9 },
+      },
+      2, false
+    },
+
+    {
+      {
+        { 1, 3, 6 },
+        { 4, 6, 7 },
+        { 5, 8, 9 },
+      },
+      5, true
+    },
+
+    {
+      {
+        { 1, 3, 6, 10 },
+        { 4, 6, 7, 12 },
+        { 5, 8, 9, 13 },
+      },
+      5, true
+    },
+
+    {
+      {
+        { 1, 3, 6, 10 },
+        { 4, 6, 7, 12 },
+        { 5, 8, 9, 13 },
+      },
+      11, false
+    },
+
+    {
+      {
+        { 1, 3, 6, 10 },
+        { 4, 6, 7, 12 },
+        { 5, 8, 9, 13 },
+      },
+      12, true
+    },
+
+	};
+
+	for (int iii = 0; iii < sizeof(test_cases) / sizeof(TestCase); iii++) {
+
+		TestCase &tc = test_cases[iii];
+
+		auto ret = sln.searchMatrix(tc.matrix, tc.target);
+
+		if ( tc.expected_ret != ret ) {
+			cout << "Case #" << iii << " failed" << endl;
+			cout << "Actual ret=" << ret << endl;
+			return -1;
+		}
+
+	}
+
+	return 0;
+}
